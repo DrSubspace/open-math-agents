@@ -1,0 +1,53 @@
+{
+  "device": "NVIDIA GeForce RTX 5090",
+  "replay_wheel_primes": 4,
+  "xor_sha256": "c1a5f7209a94b634bdc2e5e302b71a47e1868611605a55474e35b541ba264e69",
+  "rejection_certificate_counts": {
+    "cofactor": 205751,
+    "divisors": 1
+  },
+  "cpu_comparisons": [
+    {
+      "offset": 0,
+      "length": 2000003,
+      "bound": 521,
+      "survivors": 24
+    },
+    {
+      "offset": 13875013875013,
+      "length": 2000003,
+      "bound": 521,
+      "survivors": 16
+    },
+    {
+      "offset": 27750025750024,
+      "length": 2000003,
+      "bound": 521,
+      "survivors": 21
+    }
+  ],
+  "direct_divisor_cases": [
+    {
+      "n": 10005973510515888185280,
+      "divisor_counts": {
+        "1": 2,
+        "2": 4,
+        "3": 4,
+        "4": 6,
+        "5": 6,
+        "6": 8,
+        "7": 12,
+        "8": 8,
+        "9": 6,
+        "10": 8,
+        "11": 128,
+        "12": 12,
+        "13": 64,
+        "16": 40,
+        "18": 20,
+        "20": 12,
+        "24": 16
+      }
+    }
+  ]
+}
