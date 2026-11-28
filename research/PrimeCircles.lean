@@ -239,5 +239,41 @@ theorem graph_connected (N : ℕ) [NeZero N] : (graph N).Connected := by
         exact edge.reachable.trans (ih j hj)
   exact ⟨fun i j => (reach i).trans (reach j).symm⟩
 
+/-- The coprime-stride construction in project reduction #19903.
+It gives a full circle whenever all three displayed sums are prime. -/
+theorem stride {n s : ℕ} (hn : 2 ≤ n) (hs : s < n) (cop : n.Coprime s)
+    (center : (2*n+1).Prime) (lo : (2*s+1).Prime) (hi : (2*n+2*s+1).Prime) : Circle n := by
+  let g (i : Fin n) : Fin n := ⟨s*i.val % n,Nat.mod_lt _ (by omega)⟩
+  have hg : Function.Injective g := by
+    intro i j h
+    have hmod : s*i.val ≡ s*j.val [MOD n] := congrArg Fin.val h
+    have hcancel := Nat.ModEq.cancel_left_of_coprime cop hmod
+    apply Fin.ext
+    simpa only [Nat.ModEq, Nat.mod_eq_of_lt i.isLt, Nat.mod_eq_of_lt j.isLt] using hcancel
+  let o := Equiv.ofBijective g (Finite.injective_iff_bijective.mp hg)
+  let rev : Equiv.Perm (Fin n) := ⟨Fin.rev,Fin.rev,Fin.rev_rev,Fin.rev_rev⟩
+  apply from_orders o (o.trans rev)
+  · intro i
+    change (2*((g i).val+(g i).rev.val)+3).Prime
+    rw [Fin.val_rev, show 2*((g i).val+(n-((g i).val+1)))+3=2*n+1 by have := (g i).isLt; omega]
+    exact center
+  · intro i
+    have hrot : (finRotate n i).val = (i.val+1)%n := by
+      rw [rotval]
+      split
+      · rename_i h; simp [h]
+      · rw [Nat.mod_eq_of_lt (by have := i.isLt; omega)]
+    have step : (g (finRotate n i)).val = ((g i).val+s)%n := by
+      change s*(finRotate n i).val%n = (s*i.val%n+s)%n
+      rw [hrot,Nat.mul_mod_mod,Nat.mod_add_mod,Nat.mul_succ]
+    change (2*((g (finRotate n i)).val+(g i).rev.val)+3).Prime
+    rw [step, Fin.val_rev]
+    have hv := (g i).isLt
+    by_cases lt : (g i).val+s<n
+    · rw [Nat.mod_eq_of_lt lt]
+      convert hi using 1; omega
+    · rw [Nat.mod_eq_sub_mod (by omega : n ≤ (g i).val+s), Nat.mod_eq_of_lt (by omega)]
+      convert lo using 1; omega
+
 end PrimeCircles
 
